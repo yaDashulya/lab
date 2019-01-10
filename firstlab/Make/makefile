@@ -1,0 +1,40 @@
+OBJCTS = main.o file2.o file3.o
+SRCS = file2.c main.c file3.c file2.h file3.h
+
+BINDIR = ~/bin/
+
+TARGET = main
+
+.DEFAULT:
+	@echo "Oshibochka..) use make --help"
+
+all: $(TARGET)
+
+main: $(OBJCTS)
+	gcc -o main $(OBJCTS)
+
+main.o: main.c file2.h file3.h
+	gcc -c main.c
+file2.o: file2.c
+	gcc -c file2.c
+file3.o: file3.c
+	gcc -c file3.c
+
+install: all
+	cp $(TARGET) $(BINDIR)
+
+uninstall:
+	rm -rf $(BINDIR)/$(TARGET)
+
+clean:
+	rm -rf $(OBJCTS) $(TARGET) manual.txt
+dist:
+	tar cvzf test.tgz $(SRCS) makefile
+man:
+	cat $(SRCS) | grep -C 1 '//<man>' | sed 's/<man> //g' > manual.txt
+help:
+	@echo -e ' install - installs programm\n'\
+		'uninstall - uninstall programm\n'\
+		'clean - delete all files exclude sources\n'\
+		'dist - makes archive with sources\n'\
+		'man - makes manual\n'
